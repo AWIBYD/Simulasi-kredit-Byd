@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Simulasi Kredit Mobil</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom styles for better slider appearance */
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #3b82f6;
+            cursor: pointer;
+            border-radius: 50%;
+            margin-top: -6px;
+        }
+        input[type=range]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #3b82f6;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    <div class="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-6 md:p-8 space-y-8">
+        
+        <!-- Header -->
+        <div>
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800 text-center">Generator Simulasi Kredit Mobil</h1>
+            <p class="text-center text-gray-500 mt-2">Pilih mobil atau masukkan detail untuk melihat simulasi kredit secara real-time.</p>
+        </div>
+
+
+        <!-- Main Grid Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Kolom Input -->
+            <div class="space-y-6">
+                <!-- Pilihan Mobil -->
+                <div>
+                    <label for="pilihanMobil" class="block text-sm font-medium text-gray-700 mb-1">Pilih Model Mobil (BYD)</label>
+                    <select id="pilihanMobil" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <option value="0" selected>-- Pilih Mobil --</option>
+                        <!-- Opsi akan ditambahkan oleh JavaScript -->
+                    </select>
+                </div>
+                
+                <!-- Input Harga Mobil -->
+                <div>
+                    <label for="hargaMobil" class="block text-sm font-medium text-gray-700 mb-1">Atau Masukkan Harga Manual (OTR)</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">Rp</span>
+                        <input type="text" id="hargaMobil" class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="350.000.000">
+                    </div>
+                </div>
+
+
+                <!-- Input Uang Muka (DP) -->
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label for="dp" class="block text-sm font-medium text-gray-700">Uang Muka (DP)</label>
+                        <div class="flex items-center bg-gray-200 rounded-full p-0.5">
+                            <button id="dpTypePercent" class="px-3 py-1 text-xs font-semibold rounded-full bg-blue-500 text-white">Persen (%)</button>
+                            <button id="dpTypeAmount" class="px-3 py-1 text-xs font-semibold rounded-full text-gray-600">Jumlah (Rp)</button>
+                        </div>
+                    </div>
+                    <div id="dpInputPercent" class="relative">
+                         <input type="range" id="dpSlider" min="10" max="80" value="25" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                         <div class="flex justify-between text-sm text-gray-600 mt-1">
+                            <span>10%</span>
+                            <span id="dpSliderValue" class="font-semibold text-blue-600">25%</span>
+                            <span>80%</span>
+                         </div>
+                    </div>
+                    <div id="dpInputAmount" class="relative hidden">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">Rp</span>
+                        <input type="text" id="dpAmount" class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="87.500.000">
+                    </div>
+                </div>
+
+
+                <!-- Input Suku Bunga per Tenor -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Suku Bunga Flat per Tahun (%)</label>
+                    <div class="grid grid-cols-3 sm:grid-cols-5 gap-2">
+                        <div>
+                            <label for="bunga1th" class="block text-xs text-center text-gray-600 mb-1">1 Thn</label>
+                            <input type="number" id="bunga1th" class="w-full text-center p-2 border border-gray-300 rounded-md" value="4.5" step="0.1">
+                        </div>
+                        <div>
+                            <label for="bunga2th" class="block text-xs text-center text-gray-600 mb-1">2 Thn</label>
+                            <input type="number" id="bunga2th" class="w-full text-center p-2 border border-gray-300 rounded-md" value="5.0" step="0.1">
+                        </div>
+                        <div>
+                            <label for="bunga3th" class="block text-xs text-center text-gray-600 mb-1">3 Thn</label>
+                            <input type="number" id="bunga3th" class="w-full text-center p-2 border border-gray-300 rounded-md" value="5.5" step="0.1">
+                        </div>
+                        <div>
+                            <label for="bunga4th" class="block text-xs text-center text-gray-600 mb-1">4 Thn</label>
+                            <input type="number" id="bunga4th" class="w-full text-center p-2 border border-gray-300 rounded-md" value="6.0" step="0.1">
+                        </div>
+                        <div>
+                            <label for="bunga5th" class="block text-xs text-center text-gray-600 mb-1">5 Thn</label>
+                            <input type="number" id="bunga5th" class="w-full text-center p-2 border border-gray-300 rounded-md" value="6.5" step="0.1">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Input Biaya Tambahan -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Asuransi</label>
+                    <div class="flex items-center bg-gray-200 rounded-full p-0.5 mb-2">
+                        <button id="asuransiTypeAllRisk" class="flex-1 text-center px-3 py-1 text-xs font-semibold rounded-full bg-blue-500 text-white">All Risk</button>
+                        <button id="asuransiTypeTlo" class="flex-1 text-center px-3 py-1 text-xs font-semibold rounded-full text-gray-600">TLO</button>
+                    </div>
+                    <div id="asuransiInputAllRisk">
+                        <label for="rateAsuransiAllRisk" class="block text-sm font-medium text-gray-700 mb-1">Rate Asuransi All Risk (%)</label>
+                        <div class="relative">
+                            <input type="number" id="rateAsuransiAllRisk" class="w-full pl-3 pr-8 py-2 border border-gray-300 rounded-md shadow-sm" value="2.5" step="0.01">
+                            <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500">%</span>
+                        </div>
+                    </div>
+                    <div id="asuransiInputTlo" class="hidden">
+                        <label for="rateAsuransiTlo" class="block text-sm font-medium text-gray-700 mb-1">Rate Asuransi TLO (%)</label>
+                         <div class="relative">
+                            <input type="number" id="rateAsuransiTlo" class="w-full pl-3 pr-8 py-2 border border-gray-300 rounded-md shadow-sm" value="0.8" step="0.01">
+                            <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500">%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="biayaAdmin" class="block text-sm font-medium text-gray-700 mb-1">Administrasi</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">Rp</span>
+                            <input type="text" id="biayaAdmin" class="w-full pl-9 pr-2 py-2 border border-gray-300 rounded-md shadow-sm" value="1.500.000">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="provisi" class="block text-sm font-medium text-gray-700 mb-1">Provisi Kredit (%)</label>
+                        <div class="relative">
+                            <input type="range" id="provisiSlider" min="0" max="5" value="1" step="0.1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                            <div class="flex justify-between text-xs text-gray-600 mt-1">
+                               <span>0%</span>
+                               <span id="provisiSliderValue" class="font-semibold text-blue-600">1.0%</span>
+                               <span>5%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tombol Hitung -->
+                <div>
+                    <button id="hitungButton" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-300">
+                        Hitung Simulasi
+                    </button>
+                </div>
+            </div>
+
+
+            <!-- Kolom Hasil -->
+            <div class="bg-gray-50 rounded-lg p-6 space-y-4">
+                <h2 class="text-lg font-semibold text-gray-800 border-b pb-2">Ringkasan Pembiayaan</h2>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Total DP</span>
+                        <span id="hasilDp" class="font-bold text-gray-900 text-lg">Rp 87.500.000</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Pokok Hutang Awal</span>
+                        <span id="hasilPokokHutangAwal" class="font-bold text-gray-900 text-lg">Rp 262.500.000</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Biaya Lainnya</span>
+                        <span id="hasilBiayaLain" class="font-bold text-gray-900 text-lg">Rp 9.125.000</span>
+                    </div>
+                    <hr>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600 font-semibold">Total Pokok Hutang</span>
+                        <span id="hasilTotalPokokHutang" class="font-bold text-gray-900 text-lg">Rp 271.625.000</span>
+                    </div>
+                     <div class="flex justify-between items-center text-blue-600 bg-blue-100 p-3 rounded-md">
+                        <span class="font-semibold">Angsuran Utama (5 Thn)</span>
+                        <span id="hasilAngsuranUtama" class="font-bold text-xl">Rp 6.011.823</span>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+        <!-- Tabel Simulasi Tenor -->
+        <div>
+            <h2 class="text-lg font-semibold text-gray-800 mb-4 text-center lg:text-left">Tabel Simulasi Angsuran</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tenor</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Angsuran / Bulan</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Bunga</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Hutang</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelSimulasi" class="bg-white divide-y divide-gray-200">
+                        <!-- Rows will be generated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Disclaimer Note -->
+        <div class="text-center bg-yellow-100 text-yellow-800 text-sm p-3 rounded-lg">
+            <p><strong>Catatan:</strong> Biaya administrasi, provisi, dan asuransi akan menambah jumlah hutang. Besaran biaya ini bervariasi tergantung pada penyedia kredit (leasing).</p>
+        </div>
+
+
+    </div>
+
+
+    <script>
+        // --- DATA MOBIL ---
+        const dataMobil = [
+            { group: "DENZA D9", name: "DENZA D9", price: 990000000 },
+            { group: "SEALION 7", name: "SEALION 7 Premium", price: 644000000 },
+            { group: "SEALION 7", name: "SEALION 7 Performance", price: 734000000 },
+            { group: "SEAL 2025", name: "SEAL 2025 Premium", price: 654000000 },
+            { group: "SEAL 2025", name: "SEAL 2025 Performance", price: 765000000 },
+            { group: "SEAL", name: "SEAL Premium", price: 650000000 },
+            { group: "SEAL", name: "SEAL Performance", price: 741000000 },
+            { group: "M6", name: "M6 Standard", price: 398000000 },
+            { group: "M6", name: "M6 Superior", price: 438000000 },
+            { group: "M6", name: "M6 Capt Seat", price: 448000000 },
+            { group: "DOLPHIN", name: "DOLPHIN Dynamic", price: 384000000 },
+            { group: "DOLPHIN", name: "DOLPHIN Premium", price: 444000000 },
+            { group: "ATTO 1", name: "ATTO 1 Dynamic", price: 209000000 },
+            { group: "ATTO 1", name: "ATTO 1 Premium", price: 250000000 },
+            { group: "ATTO 3", name: "ATTO 3 Advanced Standard", price: 405000000 },
+            { group: "ATTO 3", name: "ATTO 3 Advanced", price: 485000000 },
+            { group: "ATTO 3", name: "ATTO 3 Superior", price: 535000000 },
+        ];
+
+
+        // Ambil semua elemen yang dibutuhkan dari DOM
+        const pilihanMobilEl = document.getElementById('pilihanMobil');
+        const hargaMobilEl = document.getElementById('hargaMobil');
+        const dpTypePercentBtn = document.getElementById('dpTypePercent');
+        const dpTypeAmountBtn = document.getElementById('dpTypeAmount');
+        const dpInputPercentDiv = document.getElementById('dpInputPercent');
+        const dpInputAmountDiv = document.getElementById('dpInputAmount');
+        const dpSliderEl = document.getElementById('dpSlider');
+        const dpSliderValueEl = document.getElementById('dpSliderValue');
+        const dpAmountEl = document.getElementById('dpAmount');
+        
+        const bungaInputs = {
+            1: document.getElementById('bunga1th'),
+            2: document.getElementById('bunga2th'),
+            3: document.getElementById('bunga3th'),
+            4: document.getElementById('bunga4th'),
+            5: document.getElementById('bunga5th'),
+        };
+
+
+        const biayaAdminEl = document.getElementById('biayaAdmin');
+        const provisiSliderEl = document.getElementById('provisiSlider');
+        const provisiSliderValueEl = document.getElementById('provisiSliderValue');
+        
+        const asuransiTypeAllRiskBtn = document.getElementById('asuransiTypeAllRisk');
+        const asuransiTypeTloBtn = document.getElementById('asuransiTypeTlo');
+        const asuransiInputAllRiskDiv = document.getElementById('asuransiInputAllRisk');
+        const asuransiInputTloDiv = document.getElementById('asuransiInputTlo');
+        const rateAsuransiAllRiskEl = document.getElementById('rateAsuransiAllRisk');
+        const rateAsuransiTloEl = document.getElementById('rateAsuransiTlo');
+
+
+        const hasilDpEl = document.getElementById('hasilDp');
+        const hasilPokokHutangAwalEl = document.getElementById('hasilPokokHutangAwal');
+        const hasilBiayaLainEl = document.getElementById('hasilBiayaLain');
+        const hasilTotalPokokHutangEl = document.getElementById('hasilTotalPokokHutang');
+        const hasilAngsuranUtamaEl = document.getElementById('hasilAngsuranUtama');
+        const tabelSimulasiEl = document.getElementById('tabelSimulasi');
+        const hitungButton = document.getElementById('hitungButton');
+
+
+        let dpType = 'percent';
+        let asuransiType = 'all_risk';
+
+
+        function formatRupiah(angka) {
+            if (isNaN(angka)) return "0";
+            return new Intl.NumberFormat('id-ID').format(angka);
+        }
+
+
+        function parseRupiah(string) {
+            return parseInt(String(string).replace(/[^0-9]/g, ''), 10) || 0;
+        }
+
+
+        function populateCarOptions() {
+            const groupedCars = dataMobil.reduce((acc, car) => {
+                acc[car.group] = acc[car.group] || [];
+                acc[car.group].push(car);
+                return acc;
+            }, {});
+
+
+            for (const group in groupedCars) {
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = group;
+                groupedCars[group].forEach(car => {
+                    const option = document.createElement('option');
+                    option.value = car.price;
+                    option.textContent = car.name;
+                    optgroup.appendChild(option);
+                });
+                pilihanMobilEl.appendChild(optgroup);
+            }
+        }
+
+
+        function calculateSimulation() {
+            const hargaMobil = parseRupiah(hargaMobilEl.value);
+            let dpAmount = 0;
+
+
+            if (dpType === 'percent') {
+                const dpPercent = parseInt(dpSliderEl.value, 10);
+                dpAmount = hargaMobil * (dpPercent / 100);
+                dpAmountEl.value = formatRupiah(dpAmount);
+            } else {
+                dpAmount = parseRupiah(dpAmountEl.value);
+                if (hargaMobil > 0) {
+                   const dpPercent = (dpAmount / hargaMobil) * 100;
+                   dpSliderEl.value = Math.round(dpPercent);
+                   dpSliderValueEl.textContent = `${Math.round(dpPercent)}%`;
+                }
+            }
+
+
+            const pokokHutangAwal = hargaMobil - dpAmount;
+            
+            const biayaAdmin = parseRupiah(biayaAdminEl.value);
+            const provisiPercent = parseFloat(provisiSliderEl.value);
+            const biayaProvisi = pokokHutangAwal * (provisiPercent / 100);
+            
+            let biayaAsuransi = 0;
+            if (asuransiType === 'all_risk') {
+                const rateAsuransi = parseFloat(rateAsuransiAllRiskEl.value) || 0;
+                biayaAsuransi = hargaMobil * (rateAsuransi / 100);
+            } else {
+                const rateAsuransi = parseFloat(rateAsuransiTloEl.value) || 0;
+                biayaAsuransi = hargaMobil * (rateAsuransi / 100);
+            }
+
+
+            const totalBiayaLainnya = biayaAdmin + biayaAsuransi + biayaProvisi;
+            const totalPokokHutang = pokokHutangAwal + totalBiayaLainnya;
+
+
+            hasilDpEl.textContent = `Rp ${formatRupiah(dpAmount)}`;
+            hasilPokokHutangAwalEl.textContent = `Rp ${formatRupiah(pokokHutangAwal)}`;
+            hasilBiayaLainEl.textContent = `Rp ${formatRupiah(Math.round(totalBiayaLainnya))}`;
+            hasilTotalPokokHutangEl.textContent = `Rp ${formatRupiah(Math.round(totalPokokHutang))}`;
+
+
+            tabelSimulasiEl.innerHTML = '';
+
+
+            const tenors = [1, 2, 3, 4, 5];
+            tenors.forEach(tahun => {
+                const sukuBunga = parseFloat(bungaInputs[tahun].value) || 0;
+                const totalBunga = totalPokokHutang * (sukuBunga / 100) * tahun;
+                const totalHutangKeseluruhan = totalPokokHutang + totalBunga;
+                const angsuranBulanan = totalHutangKeseluruhan / (tahun * 12);
+
+
+                if (tahun === 5) {
+                    hasilAngsuranUtamaEl.textContent = `Rp ${formatRupiah(Math.round(angsuranBulanan))}`;
+                }
+
+
+                const row = `
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${tahun} Tahun (${tahun * 12}x)</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 font-bold">Rp ${formatRupiah(Math.round(angsuranBulanan))}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Rp ${formatRupiah(Math.round(totalBunga))}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Rp ${formatRupiah(Math.round(totalHutangKeseluruhan))}</td>
+                    </tr>
+                `;
+                tabelSimulasiEl.innerHTML += row;
+            });
+        }
+
+
+        // --- Event Listeners ---
+        function addRupiahFormattingListener(element) {
+             element.addEventListener('input', (e) => {
+                const value = parseRupiah(e.target.value);
+                e.target.value = formatRupiah(value);
+                if (element.id === 'hargaMobil') {
+                    pilihanMobilEl.value = "0";
+                }
+            });
+        }
+        
+        addRupiahFormattingListener(hargaMobilEl);
+        addRupiahFormattingListener(biayaAdminEl);
+        
+        pilihanMobilEl.addEventListener('change', (e) => {
+            const selectedPrice = parseInt(e.target.value, 10);
+            if (selectedPrice > 0) {
+                hargaMobilEl.value = formatRupiah(selectedPrice);
+            }
+        });
+
+
+        dpAmountEl.addEventListener('input', (e) => {
+            const value = parseRupiah(e.target.value);
+            e.target.value = formatRupiah(value);
+        });
+
+
+        dpSliderEl.addEventListener('input', e => {
+            dpSliderValueEl.textContent = `${e.target.value}%`;
+        });
+        
+        provisiSliderEl.addEventListener('input', e => {
+            provisiSliderValueEl.textContent = `${parseFloat(e.target.value).toFixed(1)}%`;
+        });
+
+
+        dpTypePercentBtn.addEventListener('click', () => {
+            dpType = 'percent';
+            dpTypePercentBtn.classList.add('bg-blue-500', 'text-white');
+            dpTypeAmountBtn.classList.remove('bg-blue-500', 'text-white');
+            dpInputPercentDiv.classList.remove('hidden');
+            dpInputAmountDiv.classList.add('hidden');
+        });
+
+
+        dpTypeAmountBtn.addEventListener('click', () => {
+            dpType = 'amount';
+            dpTypeAmountBtn.classList.add('bg-blue-500', 'text-white');
+            dpTypePercentBtn.classList.remove('bg-blue-500', 'text-white');
+            dpInputAmountDiv.classList.remove('hidden');
+            dpInputPercentDiv.classList.add('hidden');
+        });
+
+
+        asuransiTypeAllRiskBtn.addEventListener('click', () => {
+            asuransiType = 'all_risk';
+            asuransiTypeAllRiskBtn.classList.add('bg-blue-500', 'text-white');
+            asuransiTypeTloBtn.classList.remove('bg-blue-500', 'text-white');
+            asuransiInputAllRiskDiv.classList.remove('hidden');
+            asuransiInputTloDiv.classList.add('hidden');
+        });
+
+
+        asuransiTypeTloBtn.addEventListener('click', () => {
+            asuransiType = 'tlo';
+            asuransiTypeTloBtn.classList.add('bg-blue-500', 'text-white');
+            asuransiTypeAllRiskBtn.classList.remove('bg-blue-500', 'text-white');
+            asuransiInputTloDiv.classList.remove('hidden');
+            asuransiInputAllRiskDiv.classList.add('hidden');
+        });
+        
+        hitungButton.addEventListener('click', calculateSimulation);
+
+
+        window.onload = () => {
+            populateCarOptions();
+            hargaMobilEl.value = formatRupiah(parseRupiah(hargaMobilEl.value));
+            dpAmountEl.value = formatRupiah(parseRupiah(dpAmountEl.value));
+            biayaAdminEl.value = formatRupiah(parseRupiah(biayaAdminEl.value));
+            calculateSimulation();
+        };
+    </script>
+</body>
+</html>
